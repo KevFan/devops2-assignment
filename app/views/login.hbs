@@ -1,0 +1,29 @@
+{{> menuWelcome _id="login" }}
+
+<section class="ui stackable grid">
+  <aside class="ui middle aligned center aligned six wide column">
+    <i class="ui  massive sign in icon"></i>
+  </aside>
+  <div class="ui ten wide column fluid form">
+    <div class="ui segment">
+      <form action="/login" method="POST">
+        <h3 class="ui header">Log-in</h3>
+        <div class="field">
+          <label>Email</label>
+          <div class="ui input left icon">
+            <i class="mail icon"></i>
+            <input placeholder="Email" type="text" name="email">
+          </div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <div class="ui input left icon">
+            <i class="lock icon"></i>
+            <input type="password" name="password">
+          </div>
+        </div>
+        <button class="ui blue submit button"><i class="sign in icon"></i>Login</button>
+      </form>
+    </div>
+  </div>
+</section>
