@@ -5,7 +5,13 @@ const Hapi = require('hapi');
 var server = new Hapi.Server();
 server.connection({ port: process.env.PORT || 4000 });
 
-server.register([require('inert'), require('vision')], err => {
+server.bind({
+  currentUser: {},
+  users: {},
+  donations: [],
+});
+
+server.register([require('inert'), require('vision'), require('hapi-auth-cookie')], err => {
 
   if (err) {
     throw err;
@@ -21,6 +27,18 @@ server.register([require('inert'), require('vision')], err => {
     partialsPath: './app/views/partials',
     layout: true,
     isCached: false,
+  });
+
+  server.auth.strategy('standard', 'cookie', {
+    password: 'secretpasswordnotrevealedtoanyone',
+    cookie: 'tweet-cookie',
+    isSecure: false,
+    ttl: 24 * 60 * 60 * 1000,
+    redirectTo: '/login',
+  });
+
+  server.auth.default({
+    strategy: 'standard',
   });
 
   server.route(require('./routes'));
