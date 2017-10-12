@@ -80,3 +80,19 @@ exports.viewSettings = {
     });
   },
 };
+
+exports.updateSettings = {
+  handler: function (request, reply) {
+    const loggedInUserEmail = request.auth.credentials.loggedInUser;
+    const editedUser = request.payload;
+    User.findOne({ email: loggedInUserEmail }).then(user => {
+      user.firstName = editedUser.firstName;
+      user.lastName = editedUser.lastName;
+      user.email = editedUser.email;
+      user.password = editedUser.password;
+      return user.save();
+    }).then(user => {
+      reply.view('settings', { title: 'Edit Account Settings', user: user });
+    });
+  },
+};
