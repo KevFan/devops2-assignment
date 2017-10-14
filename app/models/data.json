@@ -35,7 +35,7 @@
     "three": {
       "tweetText": "Third Tweet Test",
       "tweetDate": "2017-09-16 20:54:00.000Z",
-      "tweetUser": "->users.homer"
+      "tweetUser": "->users.marge"
     }
   }
 }
