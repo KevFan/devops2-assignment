@@ -91,7 +91,7 @@ exports.authenticate = {
       if (foundUser && foundUser.password === user.password) {
         request.cookieAuth.set({
           loggedIn: true,
-          loggedInUser: user.email,
+          loggedInUser: foundUser._id,
         });
         reply.redirect('/home');
       } else {
@@ -115,8 +115,8 @@ exports.logout = {
 exports.viewSettings = {
 
   handler: function (request, reply) {
-    const userEmail = request.auth.credentials.loggedInUser;
-    User.findOne({ email: userEmail }).then(foundUser => {
+    const userId = request.auth.credentials.loggedInUser;
+    User.findOne({ _id: userId }).then(foundUser => {
       reply.view('settings', { title: 'Edit Account Settings', user: foundUser });
     }).catch(err => {
       reply.redirect('/');
@@ -141,7 +141,7 @@ exports.updateSettings = {
     failAction: function (request, reply, source, error) {
       // Promise to find user to correctly render settings view with user details on failed form
       // validation
-      User.findOne({ email: request.auth.credentials.loggedInUser }).then(user => {
+      User.findOne({ _id: request.auth.credentials.loggedInUser }).then(user => {
         reply.view('settings', {
           title: 'Update settings error',
           user: user,
@@ -152,9 +152,9 @@ exports.updateSettings = {
   },
 
   handler: function (request, reply) {
-    const loggedInUserEmail = request.auth.credentials.loggedInUser;
+    const loggedInUserId = request.auth.credentials.loggedInUser;
     const editedUser = request.payload;
-    User.findOne({ email: loggedInUserEmail }).then(user => {
+    User.findOne({ _id: loggedInUserId }).then(user => {
       user.firstName = editedUser.firstName;
       user.lastName = editedUser.lastName;
       user.email = editedUser.email;
