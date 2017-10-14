@@ -15,6 +15,7 @@ module.exports = [
 
   { method: 'GET', path: '/home', config: Tweets.home },
   { method: 'POST', path: '/addTweet', config: Tweets.addTweet },
+  { method: 'GET', path: '/global', config: Tweets.globalTimeline },
 
   {
     method: 'GET',

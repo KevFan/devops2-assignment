@@ -11,33 +11,6 @@
   </button>
 </div>
 
-<div class="ui container">
-  {{#if tweets}}
-    <div class="ui centered four doubling stackable cards">
-      {{#each tweets}}
-        <div class="ui raised card">
-          <div class="content">
-            <div class="header">{{tweetDate}}</div>
-            <div class="meta">
-              <span class="category">Tweets</span>
-            </div>
-            <div class="description">
-              <p>{{tweetText}}</p>
-            </div>
-          </div>
-          <div class="extra content">
-            <div class="right floated author">
-              <i class="user icon"></i> {{tweetUser.firstName}}
-            </div>
-          </div>
-        </div>
-      {{/each}}
-    </div>
-  {{else}}
-    <section class="ui center aligned segment">
-      You have no tweets yet. Start tweeting now to begin !!
-    </section>
-  {{/if}}
-</div>
+{{> listTweets}}
 
 {{> addTweet}}
