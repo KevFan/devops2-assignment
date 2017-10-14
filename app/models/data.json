@@ -19,5 +19,23 @@
       "email": "bart@simpson.com",
       "password": "secret"
     }
+  },
+  "tweets": {
+    "_model": "Tweet",
+    "one": {
+      "tweetText": "First Tweet Test",
+      "tweetDate": "2017-07-31 22:04:00.000Z",
+      "tweetUser": "->users.homer"
+    },
+    "two": {
+      "tweetText": "Second Tweet Test",
+      "tweetDate": "2017-08-31 16:19:00.000Z",
+      "tweetUser": "->users.homer"
+    },
+    "three": {
+      "tweetText": "Third Tweet Test",
+      "tweetDate": "2017-09-16 20:54:00.000Z",
+      "tweetUser": "->users.homer"
+    }
   }
 }
