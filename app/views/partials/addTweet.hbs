@@ -1,0 +1,15 @@
+<section class="ui modal" id="addTweet"> <i class="close icon"></i>
+  <header class="header">Add Tweet</header>
+  <div class="content">
+    <form class="ui form" action="/addTweet" method="POST">
+      <div class="field">
+        <label>Description</label>
+        <textarea placeholder="Description" name="tweetText" rows="2" maxlength="140"></textarea>
+      </div>
+      <div class="ui center aligned basic segment">
+        <button class="ui blue submit button"><i class="plus icon"></i> Add Tweet </button>
+      </div>
+      {{> formerror }}
+    </form>
+  </div>
+</section>

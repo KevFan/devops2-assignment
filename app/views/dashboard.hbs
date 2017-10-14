@@ -5,6 +5,12 @@
   <p>Time line of user tweets</p>
 </section>
 
+<div class="ui center aligned basic segment">
+  <button class="circular ui icon blue button item" data-modal="addTweet">
+    <i class="plus icon"></i>
+  </button>
+</div>
+
 <div class="ui container">
   {{#if tweets}}
     <div class="ui centered four doubling stackable cards">
@@ -33,3 +39,5 @@
     </section>
   {{/if}}
 </div>
+
+{{> addTweet}}

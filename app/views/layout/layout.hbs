@@ -17,6 +17,20 @@
   $(document).ready(function () {
     $('.ui.dropdown').dropdown({ on: 'hover' });
   });
+
+  $('.item').on('click', function(){
+    // using the attribute data-modal to identify for what modal the button references
+    modal = $(this).attr('data-modal');
+    // creating the individual event attached to click over button
+    $('#'+modal+'.modal').modal(
+        'show'
+    );
+  });
+  // To close success/error messages
+  // REFERENCE: https://github.com/Semantic-Org/Semantic-UI/issues/190
+  $(".close.icon").click(function(){
+    $(this).parent().hide();
+  });
 </script>
 </body>
 </html>
