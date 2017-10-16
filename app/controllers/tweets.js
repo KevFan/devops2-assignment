@@ -9,7 +9,6 @@ exports.home = {
     let userTweets = null;
     Tweet.find({ tweetUser: userId }).populate('tweetUser').then(allUserTweets => {
       userTweets = allUserTweets;
-      // console.log('All user tweets:' + allUserTweets);
       return User.findOne({ _id: userId });
     }).then(foundUser => {
       reply.view('dashboard', { title: 'Tweet | Dashboard', tweets: userTweets, user: foundUser });
@@ -72,5 +71,30 @@ exports.deleteAllUserTweets = {
       console.log('Tried to delete all tweets with user id : ' + userId + ' but something went wrong :(');
       reply.redirect('/home');
     });
+  },
+};
+
+exports.viewUserTimeline = {
+
+  handler: function (request, reply) {
+    const userId = request.params.id;
+    if (userId === request.auth.credentials.loggedInUser) {
+      reply.redirect('/home');
+    } else {
+      let tweetsFound = null;
+      Tweet.find({ tweetUser: userId }).populate('tweetUser').then(userTweets => {
+        console.log('Successfully found all tweets with user id: ' + userId);
+        tweetsFound = userTweets;
+        return User.findOne({ _id: userId });
+      }).then(foundUser => {
+        reply.view('globalTimeline', {
+          title: foundUser.firstName + ' ' + foundUser.lastName + ' | TimeLine',
+          tweets: tweetsFound,
+        });
+      }).catch(err => {
+        console.log('Tried to delete all tweets with user id : ' + userId + ' but something went wrong :(');
+        reply.redirect('/home');
+      });
+    }
   },
 };

@@ -14,7 +14,9 @@
           </div>
           <div class="extra content">
             <div class="left floated author">
-              <i class="user icon"></i> {{tweetUser.firstName}}
+              <a href="/view/{{tweetUser._id}}">
+                <i class=" blue user icon"></i> {{tweetUser.firstName}} {{tweetUser.lastName}}
+              </a>
             </div>
             <div class="right floated">
               <a href="deleteSpecificTweet/{{_id}}">
