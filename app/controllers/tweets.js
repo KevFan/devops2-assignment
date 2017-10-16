@@ -47,3 +47,16 @@ exports.globalTimeline = {
     });
   },
 };
+
+exports.deleteSpecificTweet = {
+
+  handler: function (request, reply) {
+    Tweet.findOneAndRemove(request.params.id).then(success => {
+      console.log('Successfully deleted tweet: ' + request.params.id);
+      reply.redirect('/home');
+    }).catch(err => {
+      console.log('Tried to delete tweet: ' + request.params.id + ' but something went wrong :(');
+      reply.redirect('/home');
+    });
+  },
+};
