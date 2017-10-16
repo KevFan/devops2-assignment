@@ -50,7 +50,7 @@ exports.globalTimeline = {
 exports.deleteSpecificTweet = {
 
   handler: function (request, reply) {
-    Tweet.findOneAndRemove(request.params.id).then(success => {
+    Tweet.findOneAndRemove({ _id: request.params.id }).then(success => {
       console.log('Successfully deleted tweet: ' + request.params.id);
       reply.redirect('/home');
     }).catch(err => {
