@@ -18,11 +18,13 @@
                 <i class=" blue user icon"></i> {{tweetUser.firstName}} {{tweetUser.lastName}}
               </a>
             </div>
-            <div class="right floated">
-              <a href="deleteSpecificTweet/{{_id}}">
-                <i class="red delete icon"></i>
-              </a>
-            </div>
+            {{#if ../user}}
+              <div class="right floated">
+                <a href="deleteSpecificTweet/{{_id}}">
+                  <i class="red delete icon"></i>
+                </a>
+              </div>
+            {{/if}}
           </div>
         </div>
       {{/each}}
