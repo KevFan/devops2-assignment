@@ -10,16 +10,18 @@
     </div>
   </aside>
   <div class="ui twelve wide column">
-    <div class="ui center aligned basic segment">
-      <button class="circular ui icon blue button item" data-modal="addTweet">
-        <i class="plus icon"></i>
-      </button>
-      <a href="/deleteAllUserTweets">
-        <button class="circular ui icon red button">
-          <i class="trash icon"></i>
+    {{#if isCurrentUser}}
+      <div class="ui center aligned basic segment">
+        <button class="circular ui icon blue button item" data-modal="addTweet">
+          <i class="plus icon"></i>
         </button>
-      </a>
-    </div>
+        <a href="/deleteAllUserTweets">
+          <button class="circular ui icon red button">
+            <i class="trash icon"></i>
+          </button>
+        </a>
+      </div>
+    {{/if}}
     {{> listTweets}}
   </div>
 </section>

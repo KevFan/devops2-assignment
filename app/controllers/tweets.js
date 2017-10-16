@@ -11,7 +11,12 @@ exports.home = {
       userTweets = allUserTweets;
       return User.findOne({ _id: userId });
     }).then(foundUser => {
-      reply.view('dashboard', { title: 'Tweet | Dashboard', tweets: userTweets, user: foundUser });
+      reply.view('dashboard', {
+        title: 'Tweet | Dashboard',
+        tweets: userTweets,
+        user: foundUser,
+        isCurrentUser: true,
+      });
     }).catch(err => {
       reply.redirect('/');
     });
@@ -87,9 +92,11 @@ exports.viewUserTimeline = {
         tweetsFound = userTweets;
         return User.findOne({ _id: userId });
       }).then(foundUser => {
-        reply.view('globalTimeline', {
+        reply.view('dashboard', {
           title: foundUser.firstName + ' ' + foundUser.lastName + ' | TimeLine',
           tweets: tweetsFound,
+          user: foundUser,
+          isCurrentUser: false,
         });
       }).catch(err => {
         console.log('Tried to delete all tweets with user id : ' + userId + ' but something went wrong :(');
