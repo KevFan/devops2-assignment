@@ -88,7 +88,7 @@ exports.authenticate = {
   auth: false,
   handler: function (request, reply) {
     const user = request.payload;
-    User.findOne({email: user.email}).then(foundUser => {
+    User.findOne({ email: user.email }).then(foundUser => {
       if (foundUser && foundUser.password === user.password) {
         request.cookieAuth.set({
           loggedIn: true,
@@ -128,7 +128,13 @@ exports.viewSettings = {
   handler: function (request, reply) {
     const userId = request.auth.credentials.loggedInUser;
     User.findOne({ _id: userId }).then(foundUser => {
-      reply.view('settings', { title: 'Edit Account Settings', user: foundUser });
+      if (!foundUser) {
+        Admin.findOne({ _id: userId }).then(foundAdmin => {
+          reply.view('settings', { title: 'Edit Account Settings', user: foundAdmin, isAdmin: true });
+        });
+      } else {
+        reply.view('settings', { title: 'Edit Account Settings', user: foundUser });
+      }
     }).catch(err => {
       reply.redirect('/');
     });
@@ -153,11 +159,22 @@ exports.updateSettings = {
       // Promise to find user to correctly render settings view with user details on failed form
       // validation
       User.findOne({ _id: request.auth.credentials.loggedInUser }).then(user => {
-        reply.view('settings', {
-          title: 'Update settings error',
-          user: user,
-          errors: error.data.details,
-        }).code(400);
+        if (!user) {
+          Admin.findOne({ _id: request.auth.credentials.loggedInUser }).then(admin => {
+            reply.view('settings', {
+              title: 'Update settings error',
+              user: admin,
+              isAdmin: true,
+              errors: error.data.details,
+            }).code(400);
+          });
+        } else {
+          reply.view('settings', {
+            title: 'Update settings error',
+            user: user,
+            errors: error.data.details,
+          }).code(400);
+        }
       });
     },
   },
@@ -166,13 +183,30 @@ exports.updateSettings = {
     const loggedInUserId = request.auth.credentials.loggedInUser;
     const editedUser = request.payload;
     User.findOne({ _id: loggedInUserId }).then(user => {
-      user.firstName = editedUser.firstName;
-      user.lastName = editedUser.lastName;
-      user.email = editedUser.email;
-      user.password = editedUser.password;
-      return user.save();
+      if (user) {
+        user.firstName = editedUser.firstName;
+        user.lastName = editedUser.lastName;
+        user.email = editedUser.email;
+        user.password = editedUser.password;
+        return user.save();
+      } else {
+        throw error;
+      }
     }).then(user => {
       reply.view('settings', { title: 'Edit Account Settings', user: user });
+    }).catch(err => {
+      Admin.findOne({ _id: loggedInUserId }).then(admin => {
+        admin.firstName = editedUser.firstName;
+        admin.lastName = editedUser.lastName;
+        admin.email = editedUser.email;
+        admin.password = editedUser.password;
+        return admin.save();
+      }).then(admin => {
+        reply.view('settings', { title: 'Edit Account Settings', user: admin, isAdmin: true });
+      }).catch(err => {
+        console.log('no user or admin with id: ' + loggedInUserId);
+        reply.redirect('/');
+      });
     });
   },
 };

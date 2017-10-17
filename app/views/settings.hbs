@@ -1,4 +1,8 @@
-{{> menuUser _id="settings"}}
+{{#if isAdmin}}
+  {{> menuAdmin _id='settings'}}
+{{else}}
+  {{> menuUser _id="settings"}}
+{{/if}}
 
 <section class="ui grid">
   <aside class="ui middle aligned center aligned six wide column">
