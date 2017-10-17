@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('../models/user');
+const Admin = require('../models/admin');
 const Joi = require('joi');
 
 exports.home = {
@@ -87,7 +88,7 @@ exports.authenticate = {
   auth: false,
   handler: function (request, reply) {
     const user = request.payload;
-    User.findOne({ email: user.email }).then(foundUser => {
+    User.findOne({email: user.email}).then(foundUser => {
       if (foundUser && foundUser.password === user.password) {
         request.cookieAuth.set({
           loggedIn: true,
@@ -95,7 +96,17 @@ exports.authenticate = {
         });
         reply.redirect('/home');
       } else {
-        reply.redirect('/signup');
+        Admin.findOne({ email: user.email }).then(foundAdmin => {
+          if (foundAdmin && foundAdmin.password === user.password) {
+            request.cookieAuth.set({
+              loggedIn: true,
+              loggedInUser: foundAdmin._id,
+            });
+            reply.redirect('/admin');
+          } else {
+            reply.redirect('/signup');
+          }
+        });
       }
     }).catch(err => {
       reply.redirect('/');

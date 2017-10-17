@@ -1,6 +1,7 @@
 const Accounts = require('./app/controllers/accounts');
 const Assets = require('./app/controllers/assets');
 const Tweets = require('./app/controllers/tweets');
+const Admin = require('./app/controllers/master');
 
 module.exports = [
 
@@ -19,6 +20,8 @@ module.exports = [
   { method: 'GET', path: '/deleteSpecificTweet/{id}', config: Tweets.deleteSpecificTweet },
   { method: 'GET', path: '/deleteAllUserTweets', config: Tweets.deleteAllUserTweets },
   { method: 'GET', path: '/view/{id}', config: Tweets.viewUserTimeline },
+
+  { method: 'GET', path: '/admin', config: Admin.home },
 
   {
     method: 'GET',
