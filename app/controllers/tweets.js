@@ -1,6 +1,7 @@
 'use strict';
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
+const sortHelper = require('../utils/sort')
 
 exports.home = {
 
@@ -8,7 +9,7 @@ exports.home = {
     const userId = request.auth.credentials.loggedInUser;
     let userTweets = null;
     Tweet.find({ tweetUser: userId }).populate('tweetUser').then(allUserTweets => {
-      userTweets = allUserTweets;
+      userTweets = sortHelper.sortDateTimeNewToOld(allUserTweets);
       return User.findOne({ _id: userId });
     }).then(foundUser => {
       reply.view('dashboard', {
@@ -44,7 +45,7 @@ exports.globalTimeline = {
 
   handler: function (request, reply) {
     Tweet.find({}).populate('tweetUser').then(allTweets => {
-      reply.view('globalTimeLine', { tweets: allTweets });
+      reply.view('globalTimeLine', { tweets: sortHelper.sortDateTimeNewToOld(allTweets) });
     }).catch(err => {
       console.log('Tried to get all tweets but Something went wrong :(');
       reply.redirect('/home');
@@ -89,7 +90,7 @@ exports.viewUserTimeline = {
       let tweetsFound = null;
       Tweet.find({ tweetUser: userId }).populate('tweetUser').then(userTweets => {
         console.log('Successfully found all tweets with user id: ' + userId);
-        tweetsFound = userTweets;
+        tweetsFound = sortHelper.sortDateTimeNewToOld(userTweets);
         return User.findOne({ _id: userId });
       }).then(foundUser => {
         reply.view('dashboard', {
