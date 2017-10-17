@@ -20,6 +20,15 @@
       "password": "secret"
     }
   },
+  "admins": {
+    "_model": "Admin",
+    "homer": {
+      "firstName": "Admin",
+      "lastName": "Simpson",
+      "email": "admin@simpson.com",
+      "password": "secret"
+    }
+  },
   "tweets": {
     "_model": "Tweet",
     "one": {
