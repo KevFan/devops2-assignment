@@ -3,7 +3,7 @@
     <div class="ui centered four doubling stackable cards">
       {{#each user}}
         <div class="ui raised card">
-          <div class="center aligned content">
+          <section class="center aligned content">
             <div class="ui center aligned small image">
               <img src="/images/user.png">
             </div>
@@ -11,15 +11,17 @@
               <p>{{firstName}} {{lastName}}</p>
               {{email}}
             </div>
-          </div>
-          <div class="extra center aligned content">
+          </section>
+          <section class="extra center aligned content">
             <button class="circular ui icon teal button item" data-modal="editUser">
               <i class="edit icon"></i>
             </button>
-            <button class="circular ui icon red button">
-              <i class="trash icon"></i>
-            </button>
-          </div>
+            <a href="deleteUser/{{_id}}">
+              <button class="circular ui icon red button">
+                <i class="trash icon"></i>
+              </button>
+            </a>
+          </section>
         </div>
       {{/each}}
     </div>

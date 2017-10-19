@@ -22,6 +22,7 @@ module.exports = [
   { method: 'GET', path: '/view/{id}', config: Tweets.viewUserTimeline },
 
   { method: 'GET', path: '/admin', config: Admin.home },
+  { method: 'GET', path: '/deleteUser/{id}', config: Admin.deleteUser },
 
   {
     method: 'GET',

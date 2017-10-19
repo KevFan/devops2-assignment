@@ -1,5 +1,6 @@
 const Admin = require('../models/admin');
 const User = require('../models/user');
+const Tweet = require('../models/tweet');
 
 exports.home = {
 
@@ -15,5 +16,21 @@ exports.home = {
       reply.redirect('/');
     });
   },
+};
 
+exports.deleteUser = {
+
+  handler: function (request, reply) {
+    const userId = request.params.id;
+    Tweet.remove({ tweetUser: userId }).then(success => {
+      console.log('Successfully removed all tweets with user id:' + userId);
+      return User.remove({ _id: userId });
+    }).then(removeUserSuccess => {
+      console.log('Successfully user with id:' + userId);
+      reply.redirect('/admin');
+    }).catch(err => {
+      console.log('Something went wrong remove user and associated tweets :(');
+      reply.redirect('/admin');
+    });
+  },
 };
