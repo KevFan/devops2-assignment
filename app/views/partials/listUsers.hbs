@@ -1,0 +1,31 @@
+<div class="ui container">
+  {{#if user}}
+    <div class="ui centered four doubling stackable cards">
+      {{#each user}}
+        <div class="ui raised card">
+          <div class="center aligned content">
+            <div class="ui center aligned small image">
+              <img src="/images/user.png">
+            </div>
+            <div class="description">
+              <p>{{firstName}} {{lastName}}</p>
+              {{email}}
+            </div>
+          </div>
+          <div class="extra center aligned content">
+            <button class="circular ui icon teal button item" data-modal="editUser">
+              <i class="edit icon"></i>
+            </button>
+            <button class="circular ui icon red button">
+              <i class="trash icon"></i>
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <section class="ui center aligned segment">
+      There are no users yet :(
+    </section>
+  {{/if}}
+</div>
