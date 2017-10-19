@@ -11,7 +11,7 @@ const sort = {
     let sortedArray = null;
 
     if (theArray.length === 0) {
-      logger.info('The array has no entries to sort');
+      console.log('The array has no entries to sort');
     } else if (theArray[0].tweetDate) {
       sortedArray = theArray.sort(function (a, b) {
         return new Date(a.tweetDate) - new Date(b.tweetDate);
@@ -31,7 +31,7 @@ const sort = {
     let sortedArray = null;
 
     if (theArray.length === 0) {
-      logger.info('The array has no entries to sort');
+      console.log('The array has no entries to sort');
     } else if (theArray[0].tweetDate) {
       sortedArray = theArray.sort(function (a, b) {
         return new Date(b.tweetDate) - new Date(a.tweetDate);
