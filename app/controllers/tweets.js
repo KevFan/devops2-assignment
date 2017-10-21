@@ -56,15 +56,17 @@ exports.globalTimeline = {
 exports.deleteSpecificTweet = {
 
   handler: function (request, reply) {
-    Tweet.findOneAndRemove({ _id: request.params.id }).then(success => {
+    const tweetId = request.params.id;
+    const userId = request.params.userid;
+    Tweet.findOneAndRemove({ _id: tweetId }).then(success => {
       console.log('Successfully deleted tweet: ' + request.params.id);
-      if (request.params.userid === request.auth.credentials.loggedInUser) {
+      if (userId === request.auth.credentials.loggedInUser) {
         reply.redirect('/home');
       } else {
-        reply.redirect('/viewUser/' + request.params.userid);
+        reply.redirect('/viewUser/' + userId);
       }
     }).catch(err => {
-      console.log('Tried to delete tweet: ' + request.params.id + ' but something went wrong :(');
+      console.log('Tried to delete tweet: ' + tweetId + ' but something went wrong :(');
       reply.redirect('/home');
     });
   },
@@ -73,10 +75,14 @@ exports.deleteSpecificTweet = {
 exports.deleteAllUserTweets = {
 
   handler: function (request, reply) {
-    const userId = request.auth.credentials.loggedInUser;
+    const userId = request.params.userid;
     Tweet.remove({ tweetUser: userId }).then(success => {
       console.log('Successfully deleted all tweets with user id: ' + userId);
-      reply.redirect('/home');
+      if (userId === request.auth.credentials.loggedInUser) {
+        reply.redirect('/home');
+      } else {
+        reply.redirect('/viewUser/' + userId);
+      }
     }).catch(err => {
       console.log('Tried to delete all tweets with user id : ' + userId + ' but something went wrong :(');
       reply.redirect('/home');
