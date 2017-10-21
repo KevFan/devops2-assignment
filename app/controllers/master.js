@@ -1,6 +1,7 @@
 const Admin = require('../models/admin');
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
+const sortHelper = require('../utils/sort');
 
 exports.home = {
 
@@ -30,6 +31,27 @@ exports.deleteUser = {
       reply.redirect('/admin');
     }).catch(err => {
       console.log('Something went wrong remove user and associated tweets :(');
+      reply.redirect('/admin');
+    });
+  },
+};
+
+exports.viewUser = {
+
+  handler: function (request, reply) {
+    const userId = request.params.id;
+    let userTweets = null;
+    Tweet.find({ tweetUser: userId }).populate('tweetUser').then(allUserTweets => {
+      userTweets = sortHelper.sortDateTimeNewToOld(allUserTweets);
+      return User.findOne({ _id: userId });
+    }).then(foundUser => {
+      reply.view('dashboard', {
+        title: 'Tweet | Dashboard',
+        tweets: userTweets,
+        user: foundUser,
+        isCurrentUser: true,
+      });
+    }).catch(err => {
       reply.redirect('/admin');
     });
   },
