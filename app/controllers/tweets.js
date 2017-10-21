@@ -58,7 +58,11 @@ exports.deleteSpecificTweet = {
   handler: function (request, reply) {
     Tweet.findOneAndRemove({ _id: request.params.id }).then(success => {
       console.log('Successfully deleted tweet: ' + request.params.id);
-      reply.redirect('/home');
+      if (request.params.userid === request.auth.credentials.loggedInUser) {
+        reply.redirect('/home');
+      } else {
+        reply.redirect('/viewUser/' + request.params.userid);
+      }
     }).catch(err => {
       console.log('Tried to delete tweet: ' + request.params.id + ' but something went wrong :(');
       reply.redirect('/home');

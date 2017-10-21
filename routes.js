@@ -17,7 +17,7 @@ module.exports = [
   { method: 'GET', path: '/home', config: Tweets.home },
   { method: 'POST', path: '/addTweet', config: Tweets.addTweet },
   { method: 'GET', path: '/global', config: Tweets.globalTimeline },
-  { method: 'GET', path: '/deleteSpecificTweet/{id}', config: Tweets.deleteSpecificTweet },
+  { method: 'GET', path: '/deleteSpecificTweet/{userid}/{id}', config: Tweets.deleteSpecificTweet },
   { method: 'GET', path: '/deleteAllUserTweets', config: Tweets.deleteAllUserTweets },
   { method: 'GET', path: '/view/{id}', config: Tweets.viewUserTimeline },
 

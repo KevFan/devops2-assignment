@@ -50,6 +50,7 @@ exports.viewUser = {
         tweets: userTweets,
         user: foundUser,
         isCurrentUser: true,
+        isAdmin: true,
       });
     }).catch(err => {
       reply.redirect('/admin');

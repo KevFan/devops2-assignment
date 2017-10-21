@@ -1,4 +1,8 @@
-{{> menuUser _id="dashboard"}}
+{{#if isAdmin}}
+  {{> menuAdmin _id='dashboard'}}
+{{else}}
+  {{> menuUser _id="dashboard"}}
+{{/if}}
 
 <section class="ui stackable grid">
   <aside class="ui center aligned four wide column">

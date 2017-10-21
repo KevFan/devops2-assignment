@@ -20,7 +20,7 @@
             </div>
             {{#if ../isCurrentUser}}
               <div class="right floated">
-                <a href="deleteSpecificTweet/{{_id}}">
+                <a href="/deleteSpecificTweet/{{../user.id}}/{{_id}}">
                   <i class="red delete icon"></i>
                 </a>
               </div>
