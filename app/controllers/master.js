@@ -57,3 +57,19 @@ exports.viewUser = {
     });
   },
 };
+
+exports.deleteAllUserAndTweets = {
+
+  handler: function (request, reply) {
+    Tweet.remove({}).then(success => {
+      console.log('Successfully removed all tweets');
+      return User.remove({});
+    }).then(removeUserSuccess => {
+      console.log('Successfully removed all users');
+      reply.redirect('/admin');
+    }).catch(err => {
+      console.log('Something went wrong removing all user and tweets :(');
+      reply.redirect('/admin');
+    });
+  },
+};

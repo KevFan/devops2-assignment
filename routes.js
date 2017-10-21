@@ -24,6 +24,7 @@ module.exports = [
   { method: 'GET', path: '/admin', config: Admin.home },
   { method: 'GET', path: '/deleteUser/{id}', config: Admin.deleteUser },
   { method: 'GET', path: '/viewUser/{id}', config: Admin.viewUser },
+  { method: 'GET', path: '/deleteAllUserAndTweets', config: Admin.deleteAllUserAndTweets },
 
   {
     method: 'GET',
