@@ -28,12 +28,16 @@ exports.home = {
 exports.addTweet = {
 
   handler: function (request, reply) {
-    const userId = request.auth.credentials.loggedInUser;
+    const userId = request.params.userid;
     let tweetData = request.payload;
     tweetData.tweetUser = userId;
     console.log(tweetData);
     Tweet.create(tweetData).then(newTweet => {
-      reply.redirect('/home');
+      if (userId === request.auth.credentials.loggedInUser) {
+        reply.redirect('/home');
+      } else {
+        reply.redirect('/viewUser/' + userId);
+      }
     }).catch(err => {
       console.log('Tried to add tweet but Something went wrong :(');
       reply.redirect('/home');

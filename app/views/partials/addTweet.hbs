@@ -1,7 +1,7 @@
 <section class="ui modal" id="addTweet"> <i class="close icon"></i>
   <header class="header">Add Tweet</header>
   <div class="content">
-    <form class="ui form" action="/addTweet" method="POST">
+    <form class="ui form" action="/addTweet/{{user._id}}" method="POST">
       <div class="field">
         <label>Description</label>
         <textarea placeholder="Description" name="tweetText" rows="2" maxlength="140"></textarea>
