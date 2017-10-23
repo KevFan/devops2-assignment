@@ -13,3 +13,10 @@ Hello {{admin.firstName}} - Test
 </section>
 
 {{> listUsers}}
+
+<section class="ui modal" id="addUser"> <i class="close icon"></i>
+  <header class="header">Add new user</header>
+  <div class="ui content form">
+  {{> addUser role='admin'}}
+  </div>
+</section>
