@@ -23,7 +23,7 @@
             </a>
           </section>
         </div>
-        {{> updateSettings modal='true' user=this role='admin'}}
+        {{> updateSettings modal='true' user=this role='admin' errors=../errors}}
       {{/each}}
     </div>
   {{else}}

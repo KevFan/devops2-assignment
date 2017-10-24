@@ -165,22 +165,43 @@ exports.updateSettings = {
     failAction: function (request, reply, source, error) {
       // Promise to find user to correctly render settings view with user details on failed form
       // validation
-      User.findOne({ _id: request.auth.credentials.loggedInUser }).then(user => {
+      const userId = request.params.userid;
+      const role = request.params.role;
+      User.findOne({ _id: userId }).then(user => {
         if (!user) {
-          Admin.findOne({ _id: request.auth.credentials.loggedInUser }).then(admin => {
+          Admin.findOne({ _id: userId }).then(admin => {
             reply.view('settings', {
               title: 'Update settings error',
               user: admin,
               isAdmin: true,
+              role: 'admin',
               errors: error.data.details,
             }).code(400);
           });
         } else {
-          reply.view('settings', {
-            title: 'Update settings error',
-            user: user,
-            errors: error.data.details,
-          }).code(400);
+          if (role === 'admin') {
+            let admin = null;
+            Admin.findOne({ _id: request.auth.credentials.loggedInUser }).then(foundAdmin => {
+              admin = foundAdmin;
+              console.log(foundAdmin);
+              return User.find({});
+            }).then(allUsers => {
+              reply.view('adminDashboard', {
+                title: 'Update user error',
+                admin: admin,
+                user: allUsers,
+                role: 'user',
+                errors: error.data.details,
+              }).code(400);
+            });
+          } else {
+            reply.view('settings', {
+              title: 'Update settings error',
+              user: user,
+              role: 'user',
+              errors: error.data.details,
+            }).code(400);
+          }
         }
       });
     },
