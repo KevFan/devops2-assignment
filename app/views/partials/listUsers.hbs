@@ -13,7 +13,7 @@
             </div>
           </a>
           <section class="extra center aligned content">
-            <button class="circular ui icon teal button item" data-modal="editUser">
+            <button class="circular ui icon teal button item" data-modal="editUser{{_id}}">
               <i class="edit icon"></i>
             </button>
             <a href="/deleteUser/{{_id}}">
@@ -23,6 +23,7 @@
             </a>
           </section>
         </div>
+        {{> updateSettings modal='true' user=this role='admin'}}
       {{/each}}
     </div>
   {{else}}

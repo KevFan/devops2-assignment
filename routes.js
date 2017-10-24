@@ -12,7 +12,7 @@ module.exports = [
   { method: 'POST', path: '/login', config: Accounts.authenticate },
   { method: 'GET', path: '/logout', config: Accounts.logout },
   { method: 'GET', path: '/settings', config: Accounts.viewSettings },
-  { method: 'POST', path: '/settings', config: Accounts.updateSettings },
+  { method: 'POST', path: '/settings/{userid}/{role}', config: Accounts.updateSettings },
 
   { method: 'GET', path: '/home', config: Tweets.home },
   { method: 'POST', path: '/addTweet/{userid}', config: Tweets.addTweet },
