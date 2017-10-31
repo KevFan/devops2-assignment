@@ -22,10 +22,16 @@
   },
   "admins": {
     "_model": "Admin",
-    "homer": {
+    "one": {
       "firstName": "Admin",
       "lastName": "Simpson",
       "email": "admin@simpson.com",
+      "password": "secret"
+    },
+    "two": {
+      "firstName": "Grandpa",
+      "lastName": "Simpson",
+      "email": "grandpa@simpson.com",
       "password": "secret"
     }
   },

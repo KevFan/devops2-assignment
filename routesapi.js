@@ -1,5 +1,6 @@
 const UsersApi = require('./app/api/usersapi');
 const TweetsApi = require('./app/api/tweetssapi');
+const AdminsApi = require('./app/api/adminapi');
 
 module.exports = [
   { method: 'GET', path: '/api/users', config: UsersApi.find },
@@ -16,4 +17,11 @@ module.exports = [
   { method: 'DELETE', path: '/api/tweets', config: TweetsApi.deleteAll },
   { method: 'GET', path: '/api/tweets/users/{userid}', config: TweetsApi.findAllUser },
   { method: 'DELETE', path: '/api/tweets/users/{userid}', config: TweetsApi.deleteAllUser },
+
+  { method: 'GET', path: '/api/admins', config: AdminsApi.find },
+  { method: 'GET', path: '/api/admins/{id}', config: AdminsApi.findOne },
+  { method: 'POST', path: '/api/admins', config: AdminsApi.create },
+  { method: 'DELETE', path: '/api/admins/{id}', config: AdminsApi.deleteOne },
+  { method: 'DELETE', path: '/api/admins', config: AdminsApi.deleteAll },
+  { method: 'PUT', path: '/api/admins/{id}', config: AdminsApi.update },
 ];
