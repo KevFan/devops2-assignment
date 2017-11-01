@@ -1,4 +1,3 @@
-const Admin = require('../models/admin');
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
 const sortHelper = require('../utils/sort');
@@ -6,13 +5,9 @@ const sortHelper = require('../utils/sort');
 exports.home = {
 
   handler: function (request, reply) {
-    const userId = request.auth.credentials.loggedInUser;
-    let admin = null;
-    Admin.findOne({ _id: userId }).then(foundAdmin => {
-      admin = foundAdmin;
-      return User.find({});
-    }).then(allUsers => {
-      reply.view('adminDashboard', { title: 'Admin Dashboard', admin: admin, user: allUsers });
+
+    User.find({}).then(allUsers => {
+      reply.view('adminDashboard', { title: 'Admin Dashboard', user: allUsers });
     }).catch(err => {
       reply.redirect('/');
     });
