@@ -4,9 +4,8 @@
       {{#each tweets}}
         <div class="ui raised card">
           <div class="content">
-            <div class="header">Tweets</div>
             <div class="meta">
-              <span class="category">{{tweetDate}}</span>
+              <i class="calendar icon"></i> <span class="category">{{formatDate tweetDate}}</span>
             </div>
             <div class="description">
               <p>{{tweetText}}</p>

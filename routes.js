@@ -2,6 +2,7 @@ const Accounts = require('./app/controllers/accounts');
 const Assets = require('./app/controllers/assets');
 const Tweets = require('./app/controllers/tweets');
 const Admin = require('./app/controllers/master');
+const handleBarHelpers = require('./app/controllers/handlebarHelpers');
 
 module.exports = [
 
