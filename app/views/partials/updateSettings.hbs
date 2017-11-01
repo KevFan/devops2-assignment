@@ -4,7 +4,9 @@
   <div class="content">
 {{/if}}
     <form class="ui form" action="/settings/{{user._id}}/{{role}}" method="POST">
-      <h3 class="ui header">Update Account</h3>
+      {{# unless admin}}
+        <h3 class="ui header">Update Account</h3>
+      {{/unless}}
       <div class="two fields">
         <div class="field">
           <label>First Name</label>
@@ -35,7 +37,9 @@
           <input value="{{user.password}}" type="password" name="password">
         </div>
       </div>
-      <button class="ui blue submit button">Save</button>
+      <div class="ui center aligned basic segment">
+        <button class="ui blue submit button"><i class="save icon"></i>Save</button>
+      </div>
       {{> formerror }}
     </form>
 {{#if modal}}
