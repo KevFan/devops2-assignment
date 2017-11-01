@@ -4,10 +4,8 @@
       {{#each user}}
         <div class="ui raised card">
           <a href="/viewUser/{{_id}}" class="center aligned content">
-            <div class="ui center aligned small image">
-              <img src="/images/user.png">
-            </div>
             <div class="description">
+              <img class="ui small image" src="/images/user.png">
               <p>{{firstName}} {{lastName}}</p>
               {{email}}
             </div>
