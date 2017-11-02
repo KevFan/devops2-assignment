@@ -3,8 +3,10 @@
 const Tweet = require('../models/tweet');
 const Boom = require('boom');
 
+/**
+ * Find all tweets
+ */
 exports.findAll = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -14,11 +16,12 @@ exports.findAll = {
       reply(Boom.badImplementation('error accessing db'));
     });
   },
-
 };
 
+/**
+ * Find one tweet by id
+ */
 exports.findOne = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -28,11 +31,12 @@ exports.findOne = {
       reply(Boom.notFound('id not found'));
     });
   },
-
 };
 
+/**
+ * Find all tweets associated with a userId
+ */
 exports.findAllUser = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -42,11 +46,12 @@ exports.findAllUser = {
       reply(Boom.notFound('id not found'));
     });
   },
-
 };
 
+/**
+ * Create a tweet
+ */
 exports.create = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -57,11 +62,12 @@ exports.create = {
       reply(Boom.badImplementation('error creating tweet'));
     });
   },
-
 };
 
+/**
+ * Delete all tweets
+ */
 exports.deleteAll = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -71,11 +77,12 @@ exports.deleteAll = {
       reply(Boom.badImplementation('error removing tweets'));
     });
   },
-
 };
 
+/**
+ * Delete one tweet by id
+ */
 exports.deleteOne = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -85,11 +92,12 @@ exports.deleteOne = {
       reply(Boom.notFound('id not found'));
     });
   },
-
 };
 
+/**
+ * Delete all tweets associated with userId
+ */
 exports.deleteAllUser = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -99,5 +107,4 @@ exports.deleteAllUser = {
       reply(Boom.badImplementation('error removing tweets'));
     });
   },
-
 };

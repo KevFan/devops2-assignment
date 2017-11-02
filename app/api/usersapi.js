@@ -3,8 +3,10 @@
 const User = require('../models/user');
 const Boom = require('boom');
 
+/**
+ * Find all users
+ */
 exports.find = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -14,11 +16,12 @@ exports.find = {
       reply(Boom.badImplementation('error accessing db'));
     });
   },
-
 };
 
+/**
+ * Find one user by id
+ */
 exports.findOne = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -28,11 +31,12 @@ exports.findOne = {
       reply(Boom.notFound('id not found'));
     });
   },
-
 };
 
+/**
+ * Create a user
+ */
 exports.create = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -43,11 +47,12 @@ exports.create = {
       reply(Boom.badImplementation('error creating user'));
     });
   },
-
 };
 
+/**
+ * Delete all users
+ */
 exports.deleteAll = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -57,11 +62,12 @@ exports.deleteAll = {
       reply(Boom.badImplementation('error removing users'));
     });
   },
-
 };
 
+/**
+ * Delete one user by id
+ */
 exports.deleteOne = {
-
   auth: false,
 
   handler: function (request, reply) {
@@ -71,9 +77,11 @@ exports.deleteOne = {
       reply(Boom.notFound('id not found'));
     });
   },
-
 };
 
+/**
+ * Update a user by id
+ */
 exports.update = {
   auth: false,
 
