@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Object to connect and seed mongodb database
+ */
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
@@ -20,8 +24,10 @@ mongoose.connection.on('disconnected', function () {
 
 mongoose.connection.on('connected', function () {
   console.log('Mongoose connected to ' + dbURI);
-  if (process.env.NODE_ENV != 'production') {
-    var seeder = require('mongoose-seeder');
+
+  // In a non-production environment - seed the database from data.json
+  if (process.env.NODE_ENV !== 'production') {
+    const seeder = require('mongoose-seeder');
     const data = require('./data.json');
     const User = require('./user');
     const Tweet = require('./tweet');

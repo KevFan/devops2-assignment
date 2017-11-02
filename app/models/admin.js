@@ -2,6 +2,9 @@
 
 const mongoose = require('mongoose');
 
+/**
+ * Admin mongoose schema/model
+ */
 const adminSchema = mongoose.Schema({
   firstName: String,
   lastName: String,
