@@ -1,10 +1,12 @@
 'use strict';
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
-const sortHelper = require('../utils/sort')
+const sortHelper = require('../utils/sort');
 
+/**
+ * User home, finds the user details and all associated tweets
+ */
 exports.home = {
-
   handler: function (request, reply) {
     const userId = request.auth.credentials.loggedInUser;
     let userTweets = null;
@@ -25,17 +27,21 @@ exports.home = {
 
 };
 
+/**
+ * Add a tweet associated with a userId that is passed in as a parameter
+ */
 exports.addTweet = {
-
   handler: function (request, reply) {
     const userId = request.params.userid;
     let tweetData = request.payload;
     tweetData.tweetUser = userId;
     console.log(tweetData);
     Tweet.create(tweetData).then(newTweet => {
+      // If the user id, is the same as the loggedInUserId, redirect to user dashboard
       if (userId === request.auth.credentials.loggedInUser) {
         reply.redirect('/home');
-      } else {
+      } // Else redirect to admin view of user dashboard
+      else {
         reply.redirect('/viewUser/' + userId);
       }
     }).catch(err => {
@@ -45,8 +51,10 @@ exports.addTweet = {
   },
 };
 
+/**
+ * Sends the global time line view with all the tweets sorted by most recent date
+ */
 exports.globalTimeline = {
-
   handler: function (request, reply) {
     Tweet.find({}).populate('tweetUser').then(allTweets => {
       reply.view('globalTimeLine', { tweets: sortHelper.sortDateTimeNewToOld(allTweets) });
@@ -57,8 +65,11 @@ exports.globalTimeline = {
   },
 };
 
+/**
+ * Deletes a specific tweet by id. User id is also passed in to determine whether it's the user or
+ * a admin is deleting a tweet
+ */
 exports.deleteSpecificTweet = {
-
   handler: function (request, reply) {
     const tweetId = request.params.id;
     const userId = request.params.userid;
@@ -76,8 +87,10 @@ exports.deleteSpecificTweet = {
   },
 };
 
+/**
+ * Delete all tweets associated with a user Id
+ */
 exports.deleteAllUserTweets = {
-
   handler: function (request, reply) {
     const userId = request.params.userid;
     Tweet.remove({ tweetUser: userId }).then(success => {
@@ -94,8 +107,10 @@ exports.deleteAllUserTweets = {
   },
 };
 
+/**
+ * User view of another user's dashboard of tweets
+ */
 exports.viewUserTimeline = {
-
   handler: function (request, reply) {
     const userId = request.params.id;
     if (userId === request.auth.credentials.loggedInUser) {
@@ -114,7 +129,7 @@ exports.viewUserTimeline = {
           isCurrentUser: false,
         });
       }).catch(err => {
-        console.log('Tried to delete all tweets with user id : ' + userId + ' but something went wrong :(');
+        console.log('Tried to view all tweets with user id : ' + userId + ' but something went wrong :(');
         reply.redirect('/home');
       });
     }
