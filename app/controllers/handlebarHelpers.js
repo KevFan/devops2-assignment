@@ -8,5 +8,5 @@ const moment = require('moment');
  * August 31, 2017 5:19 PM using moment js
  */
 Handlebars.registerHelper('formatDate', (dateString) => {
-  return moment(new Date(dateString)).format('LLL');
+  return moment(new Date(dateString)).format('lll');
 });
