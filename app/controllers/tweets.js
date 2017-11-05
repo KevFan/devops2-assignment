@@ -57,7 +57,7 @@ exports.addTweet = {
 exports.globalTimeline = {
   handler: function (request, reply) {
     Tweet.find({}).populate('tweetUser').then(allTweets => {
-      reply.view('globalTimeLine', { tweets: sortHelper.sortDateTimeNewToOld(allTweets) });
+      reply.view('globalTimeline', { tweets: sortHelper.sortDateTimeNewToOld(allTweets) });
     }).catch(err => {
       console.log('Tried to get all tweets but Something went wrong :(');
       reply.redirect('/home');
