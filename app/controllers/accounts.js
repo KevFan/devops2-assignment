@@ -49,10 +49,21 @@ exports.register = {
       abortEarly: false,
     },
     failAction: function (request, reply, source, error) {
-      reply.view('signup', {
-        title: 'Sign up error',
-        errors: error.data.details,
-      }).code(400);
+      const userRole = request.params.role;
+      if (userRole === 'user') {
+        reply.view('signup', {
+          title: 'Sign up error',
+          errors: error.data.details,
+        }).code(400);
+      } else {
+        User.find({}).then(allUser => {
+          reply.view('adminDashboard', {
+            title: 'Add user error',
+            user: allUser,
+            errors: error.data.details,
+          }).code(400);
+        });
+      }
     },
   },
 
