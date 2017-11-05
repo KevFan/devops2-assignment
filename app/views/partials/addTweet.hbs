@@ -3,8 +3,8 @@
   <div class="content">
     <form class="ui form" action="/addTweet/{{user._id}}" method="POST">
       <div class="field">
-        <label>Description</label>
-        <textarea placeholder="Description" name="tweetText" rows="2" maxlength="140"></textarea>
+        <p align="right" id="charNum" class="center aligned content">140 Character's Remaining</p>
+        <textarea id="tweetText" onkeyup="countChar(this)" placeholder="Description" name="tweetText" rows="2" maxlength="140"></textarea>
       </div>
       <div class="ui center aligned basic segment">
         <button class="ui blue submit button"><i class="plus icon"></i> Add Tweet </button>
@@ -13,3 +13,11 @@
     </form>
   </div>
 </section>
+
+<script>
+  // https://stackoverflow.com/questions/5371089/count-characters-in-textarea
+  function countChar(val) {
+    let len = val.value.length;
+    $('#charNum').text(140 - len + ' Character\'s Remaining');
+  }
+</script>
