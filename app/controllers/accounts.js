@@ -119,7 +119,7 @@ exports.authenticate = {
             });
             reply.redirect('/admin');
           } else {
-            reply.redirect('/signup');
+            reply.view('login', { message: 'Email/Password incorrect', messageType: 'negative' });
           }
         });
       }
