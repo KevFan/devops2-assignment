@@ -5,11 +5,11 @@ This project is a Microblog/twitter like web application built using the Hapi fr
 ## Features
 * Users
   * Create, read and delete tweets
-  * View global timeline of tweets 
+  * View global timeline of tweets (sorted by most recent tweet date)
   * View profile and tweets of another user
 * Admin
   * Create, read, update and delete user and tweets
-* Seperate REST API
+* Separate REST API
   * Tweets API
     * Find all, find one by id and find all associated with user id
     * Delete all, delete one by id and delete all associated with user id
@@ -82,11 +82,11 @@ Admin Account:
 email: admin@simpson.com
 password: secret
 
-email: granda@simpson.com
+email: granpa@simpson.com
 password: secret
 ```
 
-Alternative for the deployed version, you can visit <https://mytweet-ent.herokuapp.com/>. The above default accounts can also be used to log in the deployed version if they have not been deleted.
+Alternatively, for the deployed version, you can visit <https://mytweet-ent.herokuapp.com/>. The above default accounts can also be used to log in the deployed version if they have not been deleted.
 
 ## List of Software + Technologies Used
 * [Node.js](https://nodejs.org/en/) - JavaScript runtime
@@ -100,8 +100,9 @@ Alternative for the deployed version, you can visit <https://mytweet-ent.herokua
 ## Improvements
 * Add user profile pictures
 * Secure the API - by knowing the endpoints, anyone can create, find, delete and update to the database. This includes deleting users and creating new admins etc.
-* Should seed the database before each test suit so that each test are independant of each other, and improve user friendliness of test command by not having to open two terminals
-
+* Should seed the database before each test suit so that each test are independent of each other, and improve user friendliness of test command by not having to open two terminals
+* More user error checking, e.g. not allowing a user to sign up using an email address already used by another user + confirm deletes etc.
+* Use a Front End framework, such as REACT/Angular that would consume the REST Api and build a single page application instead of using application routes and server rendered views.
 
 ## Authors:
 Kevin Fan ([KevFan](https://github.com/KevFan))
