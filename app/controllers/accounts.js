@@ -188,8 +188,29 @@ exports.updateSettings = {
 
       // Try finding user by user Id parameter
       User.findOne({ _id: userId }).then(user => {
-        // If no user is found try finding the admin - case where admin is updating own details
-        if (!user) {
+        // If found user
+        if (user) {
+          // if user is updating itself
+          if (role === 'user') {
+            reply.view('settings', {
+              title: 'Update settings error',
+              user: user,
+              role: 'user',
+              errors: error.data.details,
+            }).code(400);
+          } else {
+            // other user if updated by admin
+            User.find({}).then(allUsers => {
+              reply.view('adminDashboard', {
+                title: 'Update user error',
+                user: allUsers,
+                role: 'user',
+                errors: error.data.details,
+              }).code(400);
+            });
+          }
+        } else {
+          // if admin is updating itself
           Admin.findOne({ _id: userId }).then(admin => {
             reply.view('settings', {
               title: 'Update settings error',
@@ -199,31 +220,6 @@ exports.updateSettings = {
               errors: error.data.details,
             }).code(400);
           });
-        } else {
-          if (role === 'admin') { // If admin is updating a user detail
-            let admin = null;
-            Admin.findOne({ _id: request.auth.credentials.loggedInUser }).then(foundAdmin => {
-              admin = foundAdmin;
-              console.log(foundAdmin);
-              return User.find({});
-            }).then(allUsers => {
-              reply.view('adminDashboard', {
-                title: 'Update user error',
-                admin: admin,
-                user: allUsers,
-                role: 'user',
-                errors: error.data.details,
-              }).code(400);
-            });
-          } else {
-            // Other redirect to member settings - case where member is updating own details
-            reply.view('settings', {
-              title: 'Update settings error',
-              user: user,
-              role: 'user',
-              errors: error.data.details,
-            }).code(400);
-          }
         }
       });
     },
@@ -234,45 +230,30 @@ exports.updateSettings = {
     const role = request.params.role;
     const editedUser = request.payload;
 
-    // Try finding user by userId
-    User.findOne({ _id: userId }).then(user => {
-      // If we found a user
-      if (user) {
-        user.firstName = editedUser.firstName;
-        user.lastName = editedUser.lastName;
-        user.email = editedUser.email;
-        user.password = editedUser.password;
-        return user.save();
-      } // If found no user, throw error to exit current promise chain
-      else {
-        throw error;
-      }
-    }).then(user => {
-      // Use role to determine where to redirect, if member was updating or admin updating member
-      if (role === 'user') {
-        reply.view('settings', { title: 'Edit Account Settings', user: user, role: 'user' });
-      } else if (role === 'admin') {
-        reply.redirect('/admin');
+    // Try finding user by userId and update
+    User.findOneAndUpdate({ _id: userId }, editedUser, { new: true }).then(updateUser => {
+      // If got updated user
+      if (updateUser) {
+        // determine if user is updating itself or admin updating user to send specific view
+        if (role === 'user') {
+          reply.view('settings', { title: 'Edit Account Settings', user: updateUser, role: 'user' });
+        } else if (role === 'admin') {
+          reply.redirect('/admin');
+        }
+      } else {
+        // Otherwise try finding admin and update
+        Admin.findOneAndUpdate({ _id: userId }, editedUser, { new: true }).then(updateAdmin => {
+          reply.view('settings', {
+            title: 'Edit Account Settings',
+            user: updateAdmin,
+            isAdmin: true,
+            role: 'admin',
+          });
+        });
       }
     }).catch(err => {
-      // In first error, try to find an admin using the userId
-      Admin.findOne({ _id: userId }).then(admin => {
-        admin.firstName = editedUser.firstName;
-        admin.lastName = editedUser.lastName;
-        admin.email = editedUser.email;
-        admin.password = editedUser.password;
-        return admin.save();
-      }).then(admin => {
-        reply.view('settings', {
-          title: 'Edit Account Settings',
-          user: admin,
-          isAdmin: true,
-          role: 'admin',
-        });
-      }).catch(err => {
-        console.log('no user or admin with id: ' + userId);
-        reply.redirect('/');
-      });
+      console.log('no user or admin with id: ' + userId);
+      reply.redirect('/');
     });
   },
 };
