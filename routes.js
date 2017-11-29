@@ -3,6 +3,7 @@ const Assets = require('./app/controllers/assets');
 const Tweets = require('./app/controllers/tweets');
 const Admin = require('./app/controllers/master');
 const handleBarHelpers = require('./app/controllers/handlebarHelpers');
+const os = require("os");
 
 module.exports = [
 
@@ -33,5 +34,15 @@ module.exports = [
     config: { auth: false },
     handler: Assets.servePublicDirectory,
   },
+
+  {
+    method: 'GET',
+    path: '/testlb/{param}',
+    config: {auth: false},
+    handler: function (request, reply) {
+      reply('Server: ' + os.hostname());
+      console.log('testing: ' + request.params.param);
+    }
+  }
 
 ];
