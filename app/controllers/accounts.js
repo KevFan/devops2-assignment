@@ -3,6 +3,8 @@
 const User = require('../models/user');
 const Admin = require('../models/admin');
 const Joi = require('joi');
+const publicIp = require('public-ip');
+const os = require("os");
 
 /**
  * Sends the main home view
@@ -10,7 +12,9 @@ const Joi = require('joi');
 exports.home = {
   auth: false,
   handler: (request, reply) => {
-    reply.view('main', { title: 'MyTweet | Home' });
+    publicIp.v4().then(ip => {
+      reply.view('main', { title: 'MyTweet | Home', pubicIp: ip, lbserver: os.hostname()  });
+    });
   },
 };
 
