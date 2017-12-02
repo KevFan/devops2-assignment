@@ -10,23 +10,25 @@ ec2 = boto3.resource('ec2')
 ec2_metrics = { '1': 'CPUUtilization', '2': 'DiskReadOps', '3': 'DiskWriteOps', 
 '4': 'DiskReadBytes', '5': 'DiskWriteBytes', '6': 'NetworkIn', '7': 'NetworkOut', '8': 'NetworkPacketsIn', '9': 'NetworkPacketsOut'}
 
-def get_metrics(metric, instance_id):
+ec2_stats = {'1': 'Minimum', '2': 'Maximum', '3': 'Sum', '4': 'Average', '5': 'SampleCount'}
+
+def get_metrics(metric, stats, instance_id):
     response = cw.get_metric_statistics(
         Period=300,
         StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=6000),
         EndTime=datetime.datetime.utcnow(),
         MetricName=metric,
         Namespace='AWS/EC2',
-        Statistics=['Average'],
+        Statistics=[stats],
         Dimensions=[{'Name': 'InstanceId', 'Value':instance_id}]
         )
     if len(response['Datapoints']) != 0:
         print('\n' + metric)
-        print('TimeStamp', '\t\t\tUnit', '\tAverage')
+        print('TimeStamp', '\t\t\tUnit', '\t' + stats)
         for datapoint in sorted(response['Datapoints'], key=lambda x:x['Timestamp']): # sort datapoints by timestamp
-            print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint['Average']))
+            print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint[stats]))
     else:
-        print('There are no datapoints for metric: ' + metric)
+        print('\nThere are no datapoints for metric: ' + metric)
     
 
 # List instances 
@@ -45,10 +47,10 @@ def get_instance_ip():
     else:  # if there are running instances, get input from user to get instance public ip
         while True:
             try:
-                choice = input("Enter number of instance: ")
+                choice = input("\nEnter number of instance: ")
                 return instance_dict[choice]  # Get's public ip from dictionary and return
             except Exception as error:
-                print("Error: Not a valid option" + str(error))
+                print("\nError: Not a valid option" + str(error))
 
 def get_metric_name():
     print('\n#', '\tMetric')     
@@ -57,10 +59,22 @@ def get_metric_name():
 
     while True:
         try:
-            choice = input("Enter metric choice: ")
+            choice = input("\nEnter metric choice: ")
             return ec2_metrics[choice]  # Get's public ip from dictionary and return
         except Exception as error:
-            print("Error: Not a valid option" + str(error))
+            print("\nError: Not a valid option" + str(error))
+
+def get_stats_name():
+    print('\n#', '\tStatistics')     
+    for key in sorted(ec2_stats):
+        print(key, '\t' + ec2_stats[key])
+
+    while True:
+        try:
+            choice = input("\nEnter statistic choice: ")
+            return ec2_stats[choice]  # Get's public ip from dictionary and return
+        except Exception as error:
+            print("\nError: Not a valid option" + str(error))
 
 # Main menu of script
 def menu():
@@ -77,7 +91,9 @@ def main():
         menu()
         choice = input("\nEnter your choice: ")
         if choice == "1":
-            get_metrics(get_metric_name(), get_instance_ip())
+            get_metrics(get_metric_name(), get_stats_name(), get_instance_ip())
+        elif choice == "2":
+            get_stats_name()
         elif choice == "0":
             print("Exiting")
             sys.exit(0)
