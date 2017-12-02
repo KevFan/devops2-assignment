@@ -7,20 +7,26 @@ import sys
 cw = boto3.client('cloudwatch')
 ec2 = boto3.resource('ec2')
 
-def get_metrics(instance_id):
+ec2_metrics = { '1': 'CPUUtilization', '2': 'DiskReadOps', '3': 'DiskWriteOps', 
+'4': 'DiskReadBytes', '5': 'DiskWriteBytes', '6': 'NetworkIn', '7': 'NetworkOut', '8': 'NetworkPacketsIn', '9': 'NetworkPacketsOut'}
+
+def get_metrics(metric, instance_id):
     response = cw.get_metric_statistics(
         Period=300,
         StartTime=datetime.datetime.utcnow() - datetime.timedelta(seconds=6000),
         EndTime=datetime.datetime.utcnow(),
-        MetricName='CPUUtilization',
+        MetricName=metric,
         Namespace='AWS/EC2',
         Statistics=['Average'],
         Dimensions=[{'Name': 'InstanceId', 'Value':instance_id}]
         )
-    # if len(response['Datapoints']) != 0:
-    print('\nTimeStamp', '\t\t\tUnit', '\t\tAverage')
-    for datapoint in response['Datapoints']:
-        print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint['Average']))
+    if len(response['Datapoints']) != 0:
+        print('\n' + metric)
+        print('TimeStamp', '\t\t\tUnit', '\tAverage')
+        for datapoint in sorted(response['Datapoints'], key=lambda x:x['Timestamp']): # sort datapoints by timestamp
+            print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint['Average']))
+    else:
+        print('There are no datapoints for metric: ' + metric)
     
 
 # List instances 
@@ -44,6 +50,17 @@ def get_instance_ip():
             except Exception as error:
                 print("Error: Not a valid option" + str(error))
 
+def get_metric_name():
+    print('\n#', '\tMetric')     
+    for key in sorted(ec2_metrics):
+        print(key, '\t' + ec2_metrics[key])
+
+    while True:
+        try:
+            choice = input("Enter metric choice: ")
+            return ec2_metrics[choice]  # Get's public ip from dictionary and return
+        except Exception as error:
+            print("Error: Not a valid option" + str(error))
 
 # Main menu of script
 def menu():
@@ -60,7 +77,7 @@ def main():
         menu()
         choice = input("\nEnter your choice: ")
         if choice == "1":
-            get_metrics(get_instance_ip())
+            get_metrics(get_metric_name(), get_instance_ip())
         elif choice == "0":
             print("Exiting")
             sys.exit(0)
@@ -71,3 +88,4 @@ def main():
 # This is the standard boilerplate that calls the main() function.
 if __name__ == "__main__":
     main()
+python
