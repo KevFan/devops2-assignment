@@ -3,6 +3,7 @@
 import boto3
 import datetime
 import sys
+import time
 
 cw = boto3.client('cloudwatch')
 ec2 = boto3.resource('ec2')
@@ -37,17 +38,21 @@ def get_metrics(metric, stats, instance_id):
 
 # List running instances and asks user to select a running instance
 # Returns the selected instance id
-def get_instance_ip():
+def get_instance_id():
     instance_dict = {}  # Create empty dictionary
     i = 1  # Value to iterate as key for dictionary
-    print('\n#', '\tInstance ID', '\t\tPublic IP Adrress')
+    print('\n#', '\tInstance ID', '\t\tPublic IP Adrress', '\tName')
     for instance in ec2.instances.all():
         if instance.state['Name'] == 'running':  # for only instances that are running
             instance_dict[str(i)] = instance.id  # map current value of i as key to instance id
-            print(i, '\t' + instance.id, '\t' + str(instance.public_ip_address))
+            instance_name = '' # Get instance tag name
+            for tag in instance.tags:
+                if tag['Key'] == 'Name':
+                    instance_name = tag['Value']
+            print(i, '\t' + instance.id, '\t' + str(instance.public_ip_address), '\t\t' + str(instance_name))
             i += 1
     if len(instance_dict) == 0:  # if there are no instances running
-        print("You have no instances. Create one at the main menu")
+        print("You have no running instances. Must have a running instance to get metrics :( ")
         time.sleep(3)
     else:  # if there are running instances, get input from user to get instance id
         while True:
@@ -98,9 +103,9 @@ def main():
         menu()
         choice = input("\nEnter your choice: ")
         if choice == "1":
-            get_metrics(get_metric_name(), get_stats_name(), get_instance_ip())
-        elif choice == "2":
-            get_stats_name()
+            instance_id = get_instance_id()
+            if instance_id:
+                get_metrics(get_metric_name(), get_stats_name(), instance_id)
         elif choice == "0":
             print("Exiting")
             sys.exit(0)
