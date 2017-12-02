@@ -7,11 +7,15 @@ import sys
 cw = boto3.client('cloudwatch')
 ec2 = boto3.resource('ec2')
 
+# Dictionary of ec2 metric types
 ec2_metrics = { '1': 'CPUUtilization', '2': 'DiskReadOps', '3': 'DiskWriteOps', 
 '4': 'DiskReadBytes', '5': 'DiskWriteBytes', '6': 'NetworkIn', '7': 'NetworkOut', '8': 'NetworkPacketsIn', '9': 'NetworkPacketsOut'}
 
+# Dictionary of ec2 statistic types
 ec2_stats = {'1': 'Minimum', '2': 'Maximum', '3': 'Sum', '4': 'Average', '5': 'SampleCount'}
 
+# Function to get datapoint metrics by metric type, statistic type and instance id
+# Gets the data points in the last 100 minutes and sorts them by the timestamp
 def get_metrics(metric, stats, instance_id):
     response = cw.get_metric_statistics(
         Period=300,
@@ -31,27 +35,29 @@ def get_metrics(metric, stats, instance_id):
         print('\nThere are no datapoints for metric: ' + metric)
     
 
-# List instances 
+# List running instances and asks user to select a running instance
+# Returns the selected instance id
 def get_instance_ip():
     instance_dict = {}  # Create empty dictionary
     i = 1  # Value to iterate as key for dictionary
     print('\n#', '\tInstance ID', '\t\tPublic IP Adrress')
     for instance in ec2.instances.all():
         if instance.state['Name'] == 'running':  # for only instances that are running
-            instance_dict[str(i)] = instance.id  # map current value of i as key to public address value
+            instance_dict[str(i)] = instance.id  # map current value of i as key to instance id
             print(i, '\t' + instance.id, '\t' + str(instance.public_ip_address))
             i += 1
     if len(instance_dict) == 0:  # if there are no instances running
         print("You have no instances. Create one at the main menu")
         time.sleep(3)
-    else:  # if there are running instances, get input from user to get instance public ip
+    else:  # if there are running instances, get input from user to get instance id
         while True:
             try:
                 choice = input("\nEnter number of instance: ")
-                return instance_dict[choice]  # Get's public ip from dictionary and return
+                return instance_dict[choice]  # Get's instance id from dictionary and return
             except Exception as error:
                 print("\nError: Not a valid option" + str(error))
 
+# Prints metric types and asks user for metric type selection and returns it
 def get_metric_name():
     print('\n#', '\tMetric')     
     for key in sorted(ec2_metrics):
@@ -64,6 +70,7 @@ def get_metric_name():
         except Exception as error:
             print("\nError: Not a valid option" + str(error))
 
+# Prints stats types and asks user for stats type selection and returns it
 def get_stats_name():
     print('\n#', '\tStatistics')     
     for key in sorted(ec2_stats):
@@ -80,7 +87,7 @@ def get_stats_name():
 def menu():
     print('''
 Welcome
-    1. CPU Utilisation 
+    1. Get Metrics!! 
     ===================
     0. Exit''')
 
