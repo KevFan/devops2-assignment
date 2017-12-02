@@ -17,8 +17,11 @@ def get_metrics(instance_id):
         Statistics=['Average'],
         Dimensions=[{'Name': 'InstanceId', 'Value':instance_id}]
         )
-
-    print(response['Datapoints'])
+    # if len(response['Datapoints']) != 0:
+    print('\nTimeStamp', '\t\t\tUnit', '\t\tAverage')
+    for datapoint in response['Datapoints']:
+        print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint['Average']))
+    
 
 # List instances 
 def get_instance_ip():
