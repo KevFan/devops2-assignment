@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 
 let dbURI = 'mongodb://localhost/mytweet';
 if (process.env.NODE_ENV === 'production') {
-  dbURI = process.env.MONGOLAB_URI;
+  dbURI = process.env.MONGODB_URI;
 }
 
 mongoose.connect(dbURI);
