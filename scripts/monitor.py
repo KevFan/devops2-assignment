@@ -4,6 +4,8 @@ import boto3
 import datetime
 import sys
 import time
+import subprocess
+from utils import get_valid_key
 
 cw = boto3.client('cloudwatch')
 ec2 = boto3.resource('ec2')
@@ -28,23 +30,26 @@ def get_metrics(metric, stats, instance_id):
         Dimensions=[{'Name': 'InstanceId', 'Value':instance_id}]
         )
     if len(response['Datapoints']) != 0:
-        print('\n' + metric)
+        print('\n' + metric + ' - in last 100 minutes in 5 minute periods')
         print('TimeStamp', '\t\t\tUnit', '\t' + stats)
         for datapoint in sorted(response['Datapoints'], key=lambda x:x['Timestamp']): # sort datapoints by timestamp
             print(datapoint['Timestamp'], '\t' + datapoint['Unit'], '\t' + str(datapoint[stats]))
     else:
-        print('\nThere are no datapoints for metric: ' + metric)
+        print('\nThere are no datapoints for metric: ' + metric + ' - in last 100 minutes')
     
 
 # List running instances and asks user to select a running instance
-# Returns the selected instance id
-def get_instance_id():
+# Returns the selected instance id or public ip address
+def get_instance_detail(id_or_ip):
     instance_dict = {}  # Create empty dictionary
     i = 1  # Value to iterate as key for dictionary
     print('\n#', '\tInstance ID', '\t\tPublic IP Adrress', '\tName')
     for instance in ec2.instances.all():
         if instance.state['Name'] == 'running':  # for only instances that are running
-            instance_dict[str(i)] = instance.id  # map current value of i as key to instance id
+            if id_or_ip == 'id':
+                instance_dict[str(i)] = instance.id  # map current value of i as key to instance id
+            else:
+                instance_dict[str(i)] = instance.public_ip_address # map current value of i as key to public ip
             instance_name = '' # Get instance tag name
             for tag in instance.tags:
                 if tag['Key'] == 'Name':
@@ -88,11 +93,29 @@ def get_stats_name():
         except Exception as error:
             print("\nError: Not a valid option" + str(error))
 
+def tail_access_logs(key, ip):
+    cmd = " 'sudo tail -n 50 /var/log/nginx/access.log'"
+    (status, output) = subprocess.getstatusoutput(construct_ssh(key, ip, cmd))
+    if status == 0:
+        print(output)
+    else:
+        print('Error: ' + str(status) + ' output: ' + output)
+        print()
+
+# Helper to construct ssh command to reduce duplication
+def construct_ssh(key_path, public_ip, cmd):
+    return "ssh -t -o StrictHostKeyChecking=no -i " + key_path + " ec2-user@" + public_ip + cmd
+
+
+def return_menu():
+    input('\nPress any key to return to main menu...')
+
 # Main menu of script
 def menu():
     print('''
 Welcome
     1. Get Metrics!! 
+    2. Tail Nginx Access logs
     ===================
     0. Exit''')
 
@@ -103,9 +126,16 @@ def main():
         menu()
         choice = input("\nEnter your choice: ")
         if choice == "1":
-            instance_id = get_instance_id()
+            instance_id = get_instance_detail('id')
             if instance_id:
                 get_metrics(get_metric_name(), get_stats_name(), instance_id)
+                return_menu()
+        elif choice == "2":
+            ip = get_instance_detail('ip')
+            if ip:
+                key = get_valid_key('Enter path to key: ')
+                tail_access_logs(key, ip)
+                return_menu()
         elif choice == "0":
             print("Exiting")
             sys.exit(0)
@@ -116,4 +146,3 @@ def main():
 # This is the standard boilerplate that calls the main() function.
 if __name__ == "__main__":
     main()
-python
